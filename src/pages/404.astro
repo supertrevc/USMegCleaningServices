@@ -1,0 +1,29 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { content } from "../i18n/content";
+
+// Static 404 can't read the requested locale at build time, so show both languages.
+const en = content.en.notFound;
+const es = content.es.notFound;
+const lang = "en" as const;
+---
+
+<BaseLayout lang={lang} title="Page not found | US Meg Cleaning Services" noindex={true}>
+  <Header lang={lang} />
+  <main id="main" class="section">
+    <div class="container-page max-w-xl text-center">
+      <p class="font-display text-6xl font-bold text-[var(--color-accent)]">404</p>
+      <h1 class="mt-4 text-[length:var(--text-h2)]">{en.title}</h1>
+      <p class="mt-2 text-[var(--color-muted)]">{en.body}</p>
+      <h2 class="sr-only">Español</h2>
+      <p class="mt-1 text-[var(--color-muted)]">{es.body}</p>
+      <div class="mt-7 flex flex-wrap justify-center gap-3">
+        <a href="/en/" class="btn btn-accent">{en.home}</a>
+        <a href="/es/" class="btn btn-outline">{es.home}</a>
+      </div>
+    </div>
+  </main>
+  <Footer lang={lang} />
+</BaseLayout>

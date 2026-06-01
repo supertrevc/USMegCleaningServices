@@ -1,0 +1,270 @@
+---
+import { content } from "../i18n/content";
+import { business } from "../data/business";
+import type { Lang } from "../i18n/utils";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = content[lang];
+const f = t.pricing.fields;
+
+// Localized SMS template with tokens replaced client-side.
+const smsTemplate =
+  lang === "es"
+    ? "¡Hola! Quisiera una cotización: {service}, {property}, {sqft} pies², {bath} baños, {bed} habitaciones, mascotas: {pets}. Estimado ${amount}."
+    : "Hi! I'd like a quote: {service}, {property}, {sqft} sqft, {bath} bath, {bed} bed, pets: {pets}. Estimated ${amount}.";
+
+const yesLabel = f.petsYes;
+const noLabel = f.petsNo;
+const currency = lang === "es" ? "USD" : "USD";
+---
+
+<form
+  id="estimate-form"
+  class="grid gap-6 md:grid-cols-2"
+  aria-describedby="estimate-disclaimer"
+  novalidate
+>
+  <div class="grid gap-4 content-start">
+    <div>
+      <label class="block text-sm font-medium mb-1" for="calc-service"
+        >{f.service}</label
+      >
+      <select
+        id="calc-service"
+        name="service"
+        class="w-full rounded-lg border border-[var(--color-divider)] bg-white px-3 py-2.5 text-base"
+      >
+        {
+          f.serviceOptions.map((o, i) => (
+            <option value={o.value} selected={i === 0}>
+              {o.label}
+            </option>
+          ))
+        }
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium mb-1" for="calc-property"
+        >{f.property}</label
+      >
+      <select
+        id="calc-property"
+        name="property"
+        class="w-full rounded-lg border border-[var(--color-divider)] bg-white px-3 py-2.5 text-base"
+      >
+        {
+          f.propertyOptions.map((o, i) => (
+            <option value={o.value} selected={i === 1}>
+              {o.label}
+            </option>
+          ))
+        }
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium mb-1" for="calc-sqft"
+        >{f.sqft}</label
+      >
+      <input
+        id="calc-sqft"
+        name="sqft"
+        type="number"
+        min="100"
+        max="20000"
+        step="50"
+        value="1200"
+        inputmode="numeric"
+        class="w-full rounded-lg border border-[var(--color-divider)] bg-white px-3 py-2.5 text-base"
+      />
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium mb-1" for="calc-bath"
+          >{f.bathrooms}</label
+        >
+        <input
+          id="calc-bath"
+          name="bath"
+          type="number"
+          min="1"
+          max="10"
+          step="1"
+          value="2"
+          inputmode="numeric"
+          class="w-full rounded-lg border border-[var(--color-divider)] bg-white px-3 py-2.5 text-base"
+        />
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1" for="calc-bed"
+          >{f.bedrooms}</label
+        >
+        <input
+          id="calc-bed"
+          name="bed"
+          type="number"
+          min="0"
+          max="10"
+          step="1"
+          value="2"
+          inputmode="numeric"
+          class="w-full rounded-lg border border-[var(--color-divider)] bg-white px-3 py-2.5 text-base"
+        />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium mb-1" for="calc-pets"
+          >{f.pets}</label
+        >
+        <select
+          id="calc-pets"
+          name="pets"
+          class="w-full rounded-lg border border-[var(--color-divider)] bg-white px-3 py-2.5 text-base"
+        >
+          <option value="no" selected>{f.petsNo}</option>
+          <option value="yes">{f.petsYes}</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1" for="calc-floors"
+          >{f.floors}</label
+        >
+        <input
+          id="calc-floors"
+          name="floors"
+          type="number"
+          min="1"
+          max="5"
+          step="1"
+          value="1"
+          inputmode="numeric"
+          class="w-full rounded-lg border border-[var(--color-divider)] bg-white px-3 py-2.5 text-base"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Output -->
+  <div class="flex flex-col justify-between gap-4 rounded-2xl bg-[var(--color-deep)] p-6 text-[var(--color-on-dark)]">
+    <div>
+      <p class="text-sm uppercase tracking-wide opacity-80">
+        {t.pricing.estimatedLabel}
+      </p>
+      <p
+        id="estimate-output"
+        class="mt-1 font-display text-5xl font-bold text-[var(--color-accent)]"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        $0
+      </p>
+      <p id="estimate-disclaimer" class="mt-4 text-sm opacity-90">
+        {t.pricing.disclaimer}
+      </p>
+    </div>
+    <a
+      id="estimate-sms"
+      class="btn btn-accent w-full"
+      href={business.sms}
+      data-track="estimate_text_click"
+    >
+      {t.pricing.textEstimate}
+    </a>
+  </div>
+</form>
+
+<script
+  is:inline
+  define:vars={{
+    smsBase: business.sms,
+    smsTemplate,
+    yesLabel,
+    noLabel,
+  }}
+>
+  (function () {
+    const form = document.getElementById("estimate-form");
+    if (!form) return;
+    const out = document.getElementById("estimate-output");
+    const smsLink = document.getElementById("estimate-sms");
+    const num = (id, fallback) => {
+      const v = parseFloat(document.getElementById(id).value);
+      return isNaN(v) ? fallback : v;
+    };
+    const sel = (id) => document.getElementById(id);
+
+    const BASE = { regular: 95, deep: 160, move: 175 };
+
+    let lastCalculated = 0;
+
+    function calc() {
+      const service = sel("calc-service").value;
+      const property = sel("calc-property").value;
+      const sqft = Math.max(100, num("calc-sqft", 1200));
+      const bath = Math.max(1, num("calc-bath", 2));
+      const bed = Math.max(0, num("calc-bed", 2));
+      const pets = sel("calc-pets").value;
+      const floors = Math.max(1, num("calc-floors", 1));
+
+      let price =
+        (BASE[service] || 95) +
+        sqft * 0.045 +
+        bath * 15 +
+        bed * 10 +
+        (pets === "yes" ? 30 : 0) +
+        (floors - 1) * 15;
+      if (property === "house") price *= 1.05;
+      const amount = Math.max(80, Math.round(price));
+
+      out.textContent = "$" + amount.toLocaleString();
+
+      // Build prefilled SMS
+      const serviceLabel = sel("calc-service").selectedOptions[0].text;
+      const propertyLabel = sel("calc-property").selectedOptions[0].text;
+      const petsLabel = pets === "yes" ? yesLabel : noLabel;
+      const body = smsTemplate
+        .replace("{service}", serviceLabel)
+        .replace("{property}", propertyLabel)
+        .replace("{sqft}", sqft)
+        .replace("{bath}", bath)
+        .replace("{bed}", bed)
+        .replace("{pets}", petsLabel)
+        .replace("{amount}", amount);
+      smsLink.setAttribute(
+        "href",
+        smsBase + "?&body=" + encodeURIComponent(body)
+      );
+
+      // Fire analytics once per meaningful recalculation (debounced below)
+      lastCalculated = amount;
+    }
+
+    let debounce;
+    function onChange() {
+      calc();
+      clearTimeout(debounce);
+      debounce = setTimeout(function () {
+        if (window.trackEvent)
+          window.trackEvent("estimate_calculated", { value: lastCalculated });
+      }, 900);
+    }
+
+    form.addEventListener("input", onChange);
+    form.addEventListener("change", onChange);
+    smsLink.addEventListener("click", function () {
+      if (window.trackEvent)
+        window.trackEvent("estimate_text_click", { value: lastCalculated });
+    });
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+    });
+    calc();
+  })();
+</script>

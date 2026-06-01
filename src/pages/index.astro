@@ -1,17 +1,23 @@
 ---
-
+// Root entry — redirect to the default (English) locale.
+// vercel.json also handles this at the edge; this covers static preview/other hosts.
 ---
 
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="0; url=/en/" />
+    <link rel="canonical" href="/en/" />
+    <meta name="robots" content="noindex" />
+    <title>US Meg Cleaning Services</title>
+    <script is:inline>
+      // Honor a previously chosen Spanish preference if present.
+      var pref = document.cookie.match(/(?:^|;\s*)usmeg_lang=(es|en)/);
+      location.replace(pref && pref[1] === "es" ? "/es/" : "/en/");
+    </script>
+  </head>
+  <body>
+    <p>Redirecting to <a href="/en/">US Meg Cleaning Services</a>…</p>
+  </body>
 </html>

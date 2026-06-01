@@ -1,0 +1,67 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import CookieBanner from "../components/CookieBanner.astro";
+import { ROUTES, type Lang } from "../i18n/utils";
+
+interface Props {
+  lang: Lang;
+  pageKey?: keyof typeof ROUTES;
+  title: string;
+  description?: string;
+  noindex?: boolean;
+  schemas?: unknown[];
+}
+const { lang, pageKey, title, description, noindex, schemas } = Astro.props;
+---
+
+<BaseLayout
+  lang={lang}
+  pageKey={pageKey}
+  title={`${title} | US Meg Cleaning Services`}
+  description={description}
+  noindex={noindex}
+  schemas={schemas}
+>
+  <Header lang={lang} />
+  <main id="main" class="section">
+    <div class="container-page max-w-3xl">
+      <slot />
+    </div>
+  </main>
+  <Footer lang={lang} />
+  <CookieBanner lang={lang} />
+</BaseLayout>
+
+<style is:global>
+  .prose-legal h1 {
+    font-size: var(--text-h1);
+    margin-bottom: 0.5rem;
+  }
+  .prose-legal h2 {
+    font-size: var(--text-h3);
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  .prose-legal p,
+  .prose-legal li {
+    color: var(--color-muted);
+    line-height: 1.65;
+  }
+  .prose-legal p {
+    margin-bottom: 1rem;
+  }
+  .prose-legal ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .prose-legal li {
+    margin-bottom: 0.35rem;
+  }
+  .prose-legal a {
+    color: var(--color-brand);
+    text-decoration: underline;
+  }
+</style>

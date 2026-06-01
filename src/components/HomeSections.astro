@@ -1,0 +1,313 @@
+---
+import { content, SECTION_IDS, reviews } from "../i18n/content";
+import { business, neighborhoods, payments } from "../data/business";
+import type { Lang } from "../i18n/utils";
+import Calculator from "./Calculator.astro";
+import Faq from "./Faq.astro";
+import ContactForm from "./ContactForm.astro";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = content[lang];
+---
+
+<!-- 1. HERO -->
+<section id="top" class="relative overflow-hidden bg-[var(--color-surface)]">
+  <div class="container-page grid items-center gap-10 py-14 md:py-20 lg:grid-cols-2">
+    <div>
+      <p class="eyebrow">{t.hero.eyebrow}</p>
+      <h1 class="mt-3 font-display font-bold leading-[1.1] text-[clamp(2.25rem,5vw,3.75rem)]">
+        {t.hero.lines.map((line) => <span class="block">{line}</span>)}
+        <span class="block text-[var(--color-accent)]">{t.hero.punch}</span>
+        <span class="block text-[var(--color-muted)] text-[clamp(1.1rem,2.4vw,1.6rem)] font-semibold mt-2">
+          {lang === "es" ? "para que tú no tengas que hacerlo." : "so you don't have to."}
+        </span>
+      </h1>
+      <div class="mt-7 flex flex-wrap gap-3">
+        <a href={business.sms} class="btn btn-accent text-base" data-track="sms_click">
+          {t.hero.primaryCta}
+        </a>
+        <a href={`#${SECTION_IDS.pricing}`} class="btn btn-outline text-base">
+          {t.pricing.title}
+        </a>
+      </div>
+      <p class="mt-4 text-[var(--color-muted)]">
+        {t.hero.secondaryPre}{" "}
+        <a class="font-semibold text-[var(--color-brand)] hover:underline" href={business.tel} data-track="phone_click">
+          {t.hero.secondaryLink}
+        </a>
+      </p>
+    </div>
+
+    <div class="relative">
+      <img
+        src="/img/hi-we-are-meg.webp"
+        alt={t.about.imgAlt}
+        width="640"
+        height="640"
+        fetchpriority="high"
+        decoding="async"
+        class="mx-auto w-full max-w-md drop-shadow-xl"
+      />
+    </div>
+  </div>
+</section>
+
+<!-- 2. SOCIAL PROOF BAR -->
+<section class="border-y border-[var(--color-divider)] bg-white">
+  <div class="container-page flex flex-col items-center justify-center gap-4 py-5 text-center md:flex-row md:flex-wrap md:gap-8">
+    <a href={business.reviewLink} rel="noopener" target="_blank" class="font-semibold text-[var(--color-deep)] hover:underline">
+      <span class="text-[var(--color-accent)]">★★★★★</span> {t.social.google}
+    </a>
+    <span class="hidden h-5 w-px bg-[var(--color-divider)] md:block"></span>
+    <span class="inline-flex items-center gap-2 font-medium text-[var(--color-brand)]">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></svg>
+      {t.social.eco}
+    </span>
+    <span class="hidden h-5 w-px bg-[var(--color-divider)] md:block"></span>
+    <div class="flex flex-wrap items-center justify-center gap-2">
+      <span class="sr-only">{t.social.paymentsLabel}</span>
+      {
+        payments.map((p) => (
+          <span class="rounded-full border border-[var(--color-divider)] px-3 py-1 text-xs font-medium text-[var(--color-muted)]">
+            {p}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<main id="main">
+  <!-- 3. ABOUT -->
+  <section id={SECTION_IDS.about} class="section">
+    <div class="container-page grid items-center gap-10 lg:grid-cols-2">
+      <div class="order-2 lg:order-1">
+        <p class="eyebrow">{t.about.title}</p>
+        <h2 class="mt-2 text-[length:var(--text-h2)]">{t.about.title}</h2>
+        <p class="mt-4 text-[var(--color-muted)] leading-relaxed">{t.about.body}</p>
+      </div>
+      <div class="order-1 lg:order-2">
+        <img
+          src="/img/hi-we-are-meg.webp"
+          alt={t.about.imgAlt}
+          width="560"
+          height="560"
+          loading="lazy"
+          decoding="async"
+          class="mx-auto w-full max-w-sm"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. SERVICES -->
+  <section id={SECTION_IDS.services} class="section bg-white">
+    <div class="container-page">
+      <div class="max-w-2xl">
+        <p class="eyebrow">{t.services.title}</p>
+        <h2 class="mt-2 text-[length:var(--text-h2)]">{t.services.title}</h2>
+        <p class="mt-4 text-[var(--color-muted)]">{t.services.intro}</p>
+      </div>
+      <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          t.services.cards.map((card) => (
+            <li class="card group flex flex-col overflow-hidden">
+              <img
+                src={card.img}
+                alt={card.alt}
+                width="400"
+                height="260"
+                loading="lazy"
+                decoding="async"
+                class="h-44 w-full object-cover"
+              />
+              <div class="flex flex-1 flex-col p-5">
+                <h3 class="text-h4">{card.title}</h3>
+                <p class="mt-2 flex-1 text-sm text-[var(--color-muted)]">{card.desc}</p>
+                <a
+                  href={business.sms}
+                  class="mt-4 inline-flex items-center gap-1 font-display text-sm font-semibold text-[var(--color-brand)] hover:underline"
+                  data-track="sms_click"
+                >
+                  {t.cta.textForQuote}
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="mt-6 text-sm text-[var(--color-muted)]">
+        <span class="font-semibold text-[var(--color-ink)]">{t.services.alsoLabel}</span>
+        {" "}{t.services.also}
+      </p>
+    </div>
+  </section>
+
+  <!-- 5. WHO WE SERVE -->
+  <section id={SECTION_IDS.who} class="section">
+    <div class="container-page">
+      <h2 class="max-w-3xl text-[length:var(--text-h2)]">{t.who.title}</h2>
+      <div class="mt-10 grid gap-6 md:grid-cols-3">
+        {
+          t.who.cols.map((col) => (
+            <div class="card p-6">
+              <h3 class="text-h4">{col.title}</h3>
+              <p class="mt-3 text-[var(--color-muted)]">{col.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. AREAS WE SERVE -->
+  <section id={SECTION_IDS.areas} class="section bg-[var(--color-deep)] text-[var(--color-on-dark)]">
+    <div class="container-page grid gap-10 lg:grid-cols-2 lg:items-center">
+      <div>
+        <p class="eyebrow text-[var(--color-accent)]">{t.areas.title}</p>
+        <h2 class="mt-2 text-[length:var(--text-h2)] text-white">{t.areas.title}</h2>
+        <p class="mt-4 opacity-90">{t.areas.body}</p>
+        <ul class="mt-6 flex flex-wrap gap-2">
+          {
+            neighborhoods.map((n) => (
+              <li class="rounded-full bg-white/10 px-3 py-1.5 text-sm">{n}</li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="overflow-hidden rounded-2xl border border-white/15">
+        <iframe
+          src={business.mapEmbed}
+          title={t.areas.mapTitle}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          width="100%"
+          height="380"
+          style="border:0; display:block;"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. PRICING / CALCULATOR -->
+  <section id={SECTION_IDS.pricing} class="section bg-white">
+    <div class="container-page grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:items-start">
+      <div>
+        <p class="eyebrow">{t.pricing.title}</p>
+        <h2 class="mt-2 text-[length:var(--text-h2)]">{t.pricing.title}</h2>
+        <p class="mt-4 text-[var(--color-muted)]">{t.pricing.body}</p>
+        <img
+          src="/img/maid-section.webp"
+          alt={t.pricing.imgAlt}
+          width="520"
+          height="360"
+          loading="lazy"
+          decoding="async"
+          class="mt-6 hidden w-full rounded-2xl object-cover lg:block"
+        />
+      </div>
+      <Calculator lang={lang} />
+    </div>
+  </section>
+
+  <!-- 8. HOW WE WORK -->
+  <section id={SECTION_IDS.how} class="section">
+    <div class="container-page">
+      <p class="eyebrow">{t.how.eyebrow}</p>
+      <h2 class="mt-2 text-[length:var(--text-h2)]">{t.how.title}</h2>
+      <ol class="mt-10 grid gap-6 md:grid-cols-3">
+        {
+          t.how.steps.map((step, i) => (
+            <li class="card overflow-hidden">
+              <img
+                src={`/img/how-we-work/step-${i + 1}.webp`}
+                alt={step.alt}
+                width="420"
+                height="240"
+                loading="lazy"
+                decoding="async"
+                class="h-44 w-full object-cover"
+              />
+              <div class="p-6">
+                <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-accent)] font-display font-bold text-[var(--color-ink)]">
+                  {i + 1}
+                </span>
+                <h3 class="mt-3 text-h4">{step.title}</h3>
+                <p class="mt-2 text-[var(--color-muted)]">{step.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- 9. TESTIMONIALS -->
+  <section class="section bg-white">
+    <div class="container-page">
+      <div class="max-w-2xl">
+        <p class="eyebrow">{t.testimonials.title}</p>
+        <h2 class="mt-2 text-[length:var(--text-h2)]">{t.testimonials.title}</h2>
+        <p class="mt-4 text-[var(--color-muted)]">
+          {t.testimonials.sub}{" "}
+          <a class="font-semibold text-[var(--color-brand)] hover:underline" href={business.reviewLink} rel="noopener" target="_blank">
+            {t.cta.leaveReview}
+          </a>.
+        </p>
+      </div>
+      <ul class="mt-10 grid gap-6 md:grid-cols-3">
+        {
+          reviews.map((r) => (
+            <li class="card flex flex-col p-6">
+              <p class="text-[var(--color-accent)]" aria-label="5 out of 5 stars">★★★★★</p>
+              <blockquote class="mt-3 flex-1 text-[var(--color-ink)]">“{r.text}”</blockquote>
+              <p class="mt-4 font-display font-semibold text-[var(--color-deep)]">— {r.name}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- 10. FAQ -->
+  <section id={SECTION_IDS.faqs} class="section">
+    <div class="container-page">
+      <div class="max-w-2xl">
+        <p class="eyebrow">{t.faq.title}</p>
+        <h2 class="mt-2 text-[length:var(--text-h2)]">{t.faq.title}</h2>
+      </div>
+      <div class="mt-10">
+        <Faq groups={t.faq.groups} />
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. FINAL CTA -->
+  <section class="bg-[var(--color-deep)]">
+    <div class="container-page py-16 text-center">
+      <h2 class="text-[length:var(--text-h2)] text-white">{t.finalCta.title}</h2>
+      <p class="mx-auto mt-3 max-w-xl text-[var(--color-on-dark)] opacity-90">{t.finalCta.sub}</p>
+      <div class="mt-7 flex flex-wrap justify-center gap-3">
+        <a href={business.sms} class="btn btn-accent text-base" data-track="sms_click">{t.hero.primaryCta}</a>
+        <a href={business.tel} class="btn btn-ghost-on-dark text-base" data-track="phone_click">{t.cta.call}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. CONTACT -->
+  <section id={SECTION_IDS.contact} class="section bg-white">
+    <div class="container-page">
+      <div class="max-w-2xl">
+        <p class="eyebrow">{t.contact.title}</p>
+        <h2 class="mt-2 text-[length:var(--text-h2)]">{t.contact.title}</h2>
+      </div>
+      <div class="mt-10">
+        <ContactForm lang={lang} />
+      </div>
+    </div>
+  </section>
+</main>

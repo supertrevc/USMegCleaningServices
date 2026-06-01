@@ -1,0 +1,19 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import HomeSections from "../../components/HomeSections.astro";
+import CookieBanner from "../../components/CookieBanner.astro";
+import { homeSchemas } from "../../lib/schema";
+
+const lang = "en" as const;
+const site = Astro.site?.toString().replace(/\/$/, "") ?? "";
+const schemas = homeSchemas(site, lang);
+---
+
+<BaseLayout lang={lang} pageKey="home" schemas={schemas}>
+  <Header lang={lang} />
+  <HomeSections lang={lang} />
+  <Footer lang={lang} />
+  <CookieBanner lang={lang} />
+</BaseLayout>

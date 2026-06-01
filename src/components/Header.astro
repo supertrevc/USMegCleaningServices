@@ -1,0 +1,237 @@
+---
+import { content } from "../i18n/content";
+import { business } from "../data/business";
+import { alternateForLang, ROUTES, type Lang } from "../i18n/utils";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = content[lang];
+const home = ROUTES.home[lang];
+const otherLang: Lang = lang === "en" ? "es" : "en";
+const altHref = alternateForLang(Astro.url.pathname, otherLang);
+---
+
+<header
+  id="site-header"
+  class="sticky top-0 z-40 border-b border-transparent bg-[var(--color-surface)]/95 backdrop-blur transition-all"
+>
+  <div class="container-page flex h-16 items-center justify-between gap-4 lg:h-20">
+    <!-- Logo -->
+    <a
+      href={home}
+      class="flex items-center gap-2 font-display text-lg font-bold leading-tight text-[var(--color-deep)]"
+      aria-label="US Meg Cleaning Services — home"
+    >
+      <svg class="h-8 w-8 text-[var(--color-brand)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="m3 11 18-5v12L3 14v-3z" /><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
+      </svg>
+      <span>US Meg<span class="text-[var(--color-brand)]"> Cleaning</span></span>
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden xl:block" aria-label="Primary">
+      <ul class="flex items-center gap-5 text-sm font-medium">
+        {
+          t.nav.map((item) => (
+            <li>
+              <a
+                class="text-[var(--color-ink)] hover:text-[var(--color-brand)]"
+                href={item.href}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <!-- Utility cluster -->
+    <div class="flex items-center gap-2">
+      <!-- Language toggle -->
+      <a
+        href={altHref}
+        hreflang={otherLang}
+        class="hidden rounded-full border border-[var(--color-divider)] px-3 py-1.5 text-sm font-medium hover:border-[var(--color-brand)] sm:inline-flex"
+        aria-label={`Switch language to ${t.langName[otherLang]}`}
+      >
+        {otherLang.toUpperCase()}
+      </a>
+
+      <!-- Social -->
+      <a href={business.instagram} class="hidden p-2 text-[var(--color-deep)] hover:text-[var(--color-brand)] sm:inline-flex" aria-label="Instagram" rel="noopener" target="_blank">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
+      </a>
+      <a href={business.facebook} class="hidden p-2 text-[var(--color-deep)] hover:text-[var(--color-brand)] sm:inline-flex" aria-label="Facebook" rel="noopener" target="_blank">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 9h3l.5-3H14V4.5c0-.8.3-1.5 1.5-1.5H17V.2C16.5.1 15.4 0 14.3 0 11.9 0 10.5 1.4 10.5 4v2H8v3h2.5v9h3.5V9z"/></svg>
+      </a>
+
+      <!-- SMS CTA -->
+      <a
+        href={business.sms}
+        class="btn btn-accent hidden text-sm md:inline-flex"
+        data-track="sms_click"
+      >
+        {t.cta.textUs}
+      </a>
+
+      <!-- Mobile menu button -->
+      <button
+        type="button"
+        id="menu-open"
+        class="inline-flex h-11 w-11 items-center justify-center rounded-lg text-[var(--color-deep)] xl:hidden"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile slide-in menu -->
+<div
+  id="mobile-menu"
+  class="fixed inset-0 z-50 hidden xl:hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Menu"
+>
+  <div id="menu-overlay" class="absolute inset-0 bg-[rgba(15,76,92,0.5)]"></div>
+  <div
+    class="absolute right-0 top-0 flex h-full w-[85%] max-w-sm flex-col bg-white shadow-xl"
+  >
+    <div class="flex items-center justify-between border-b border-[var(--color-divider)] p-4">
+      <span class="font-display font-bold text-[var(--color-deep)]">US Meg Cleaning</span>
+      <button
+        type="button"
+        id="menu-close"
+        class="inline-flex h-11 w-11 items-center justify-center rounded-lg text-[var(--color-deep)]"
+        aria-label="Close menu"
+      >
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+      </button>
+    </div>
+
+    <nav class="flex-1 overflow-y-auto p-4" aria-label="Mobile">
+      <ul class="grid gap-1">
+        {
+          t.nav.map((item) => (
+            <li>
+              <a
+                class="mobile-link flex min-h-[44px] items-center rounded-lg px-3 text-base font-medium text-[var(--color-ink)] hover:bg-[var(--color-surface)]"
+                href={item.href}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="border-t border-[var(--color-divider)] p-4">
+      <div class="mb-3 flex items-center justify-between">
+        <div class="flex gap-3">
+          <a href={business.instagram} class="p-2 text-[var(--color-deep)]" aria-label="Instagram" rel="noopener" target="_blank">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
+          </a>
+          <a href={business.facebook} class="p-2 text-[var(--color-deep)]" aria-label="Facebook" rel="noopener" target="_blank">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 9h3l.5-3H14V4.5c0-.8.3-1.5 1.5-1.5H17V.2C16.5.1 15.4 0 14.3 0 11.9 0 10.5 1.4 10.5 4v2H8v3h2.5v9h3.5V9z"/></svg>
+          </a>
+        </div>
+        <a
+          href={altHref}
+          hreflang={otherLang}
+          class="rounded-full border border-[var(--color-divider)] px-3 py-1.5 text-sm font-medium"
+          aria-label={`Switch language to ${t.langName[otherLang]}`}
+        >
+          {t.langName[otherLang]}
+        </a>
+      </div>
+      <a href={business.sms} class="btn btn-accent w-full" data-track="sms_click">
+        {t.cta.textUs}
+      </a>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    // Sticky header shadow on scroll
+    const header = document.getElementById("site-header");
+    const onScroll = function () {
+      if (window.scrollY > 8) {
+        header.classList.add("shadow-md", "border-[var(--color-divider)]");
+      } else {
+        header.classList.remove("shadow-md", "border-[var(--color-divider)]");
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    // Mobile menu open/close with focus trap
+    const menu = document.getElementById("mobile-menu");
+    const openBtn = document.getElementById("menu-open");
+    const closeBtn = document.getElementById("menu-close");
+    const overlay = document.getElementById("menu-overlay");
+    let lastFocus = null;
+
+    function focusable() {
+      return menu.querySelectorAll(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+    }
+    function open() {
+      lastFocus = document.activeElement;
+      menu.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+      openBtn.setAttribute("aria-expanded", "true");
+      const f = focusable();
+      if (f.length) f[0].focus();
+    }
+    function close() {
+      menu.classList.add("hidden");
+      document.body.style.overflow = "";
+      openBtn.setAttribute("aria-expanded", "false");
+      if (lastFocus) lastFocus.focus();
+    }
+    openBtn.addEventListener("click", open);
+    closeBtn.addEventListener("click", close);
+    overlay.addEventListener("click", close);
+    menu.querySelectorAll(".mobile-link").forEach(function (l) {
+      l.addEventListener("click", close);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (menu.classList.contains("hidden")) return;
+      if (e.key === "Escape") {
+        close();
+        return;
+      }
+      if (e.key === "Tab") {
+        const f = focusable();
+        if (!f.length) return;
+        const first = f[0];
+        const last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
+
+    // Analytics: delegated tracking for [data-track] links
+    document.addEventListener("click", function (e) {
+      const el = e.target.closest("[data-track]");
+      if (el && window.trackEvent) {
+        window.trackEvent(el.getAttribute("data-track"), {});
+      }
+    });
+  })();
+</script>

@@ -1,0 +1,88 @@
+---
+import { content } from "../i18n/content";
+import { business } from "../data/business";
+import { ROUTES, type Lang } from "../i18n/utils";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = content[lang];
+const year = 2026;
+const legalLinks = [
+  { href: ROUTES.privacy[lang], label: t.legal.privacy },
+  { href: ROUTES.terms[lang], label: t.legal.terms },
+  { href: ROUTES.cookies[lang], label: t.legal.cookies },
+  { href: ROUTES.accessibility[lang], label: t.legal.accessibility },
+];
+---
+
+<footer class="bg-[var(--color-deep)] text-[var(--color-on-dark)]">
+  <div class="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4">
+    <!-- Brand -->
+    <div class="lg:col-span-2">
+      <p class="font-display text-lg font-bold">US Meg Cleaning Services</p>
+      <p class="mt-3 max-w-md text-sm opacity-90">{t.footer.tagline}</p>
+      <div class="mt-4 flex gap-3">
+        <a href={business.instagram} class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 hover:bg-white/20" aria-label="Instagram" rel="noopener" target="_blank">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
+        </a>
+        <a href={business.facebook} class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 hover:bg-white/20" aria-label="Facebook" rel="noopener" target="_blank">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 9h3l.5-3H14V4.5c0-.8.3-1.5 1.5-1.5H17V.2C16.5.1 15.4 0 14.3 0 11.9 0 10.5 1.4 10.5 4v2H8v3h2.5v9h3.5V9z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Quick links -->
+    <nav aria-label={t.footer.quickLinks}>
+      <h2 class="font-display text-sm font-semibold uppercase tracking-wide text-[var(--color-accent)]">
+        {t.footer.quickLinks}
+      </h2>
+      <ul class="mt-3 grid gap-2 text-sm">
+        {
+          t.nav.map((item) => (
+            <li>
+              <a class="opacity-90 hover:opacity-100 hover:underline" href={item.href}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <!-- Contact + legal -->
+    <div>
+      <h2 class="font-display text-sm font-semibold uppercase tracking-wide text-[var(--color-accent)]">
+        {t.contact.title}
+      </h2>
+      <ul class="mt-3 grid gap-2 text-sm">
+        <li><a class="opacity-90 hover:underline" href={business.sms} data-track="sms_click">{business.phoneDisplay}</a></li>
+        <li><a class="opacity-90 hover:underline" href={business.mailto}>{business.email}</a></li>
+        <li class="opacity-90">{t.footer.builtNote}</li>
+      </ul>
+      <h2 class="mt-5 font-display text-sm font-semibold uppercase tracking-wide text-[var(--color-accent)]">
+        {t.footer.legal}
+      </h2>
+      <ul class="mt-3 grid gap-2 text-sm">
+        {
+          legalLinks.map((l) => (
+            <li><a class="opacity-90 hover:underline" href={l.href}>{l.label}</a></li>
+          ))
+        }
+        <li>
+          <button type="button" class="cookie-prefs-btn opacity-90 hover:underline" onclick="window.openCookiePrefs && window.openCookiePrefs()">
+            {t.footer.cookiePrefs}
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-white/15">
+    <div class="container-page flex flex-col gap-2 py-5 text-xs opacity-80 sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} US Meg Cleaning Services. {t.footer.rights}</p>
+      <p>{business.city}, {business.regionName}</p>
+    </div>
+  </div>
+</footer>

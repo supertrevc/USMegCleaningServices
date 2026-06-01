@@ -1,0 +1,20 @@
+---
+import PageLayout from "../../../layouts/PageLayout.astro";
+import ServicesContent from "../../../components/ServicesContent.astro";
+import { content } from "../../../i18n/content";
+import { serviceSchemas } from "../../../lib/schema";
+
+const lang = "en" as const;
+const site = Astro.site?.toString().replace(/\/$/, "") ?? "";
+const t = content[lang];
+---
+
+<PageLayout
+  lang={lang}
+  pageKey="services"
+  title={t.services.title}
+  description={t.services.intro}
+  schemas={serviceSchemas(site, lang)}
+>
+  <ServicesContent lang={lang} />
+</PageLayout>

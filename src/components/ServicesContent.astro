@@ -1,0 +1,57 @@
+---
+import { content, SECTION_IDS } from "../i18n/content";
+import { business } from "../data/business";
+import { ROUTES, type Lang } from "../i18n/utils";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = content[lang];
+const home = ROUTES.home[lang];
+---
+
+<article>
+  <p class="eyebrow">{t.services.title}</p>
+  <h1 class="mt-2 text-[length:var(--text-h1)]">{t.services.title}</h1>
+  <p class="mt-4 max-w-2xl text-[var(--color-muted)]">{t.services.intro}</p>
+
+  <div class="mt-10 grid gap-8">
+    {
+      t.services.cards.map((card, i) => (
+        <section class={`grid items-center gap-6 md:grid-cols-2 ${i % 2 ? "md:[direction:rtl]" : ""}`}>
+          <img
+            src={card.img}
+            alt={card.alt}
+            width="560"
+            height="360"
+            loading={i === 0 ? "eager" : "lazy"}
+            decoding="async"
+            class="w-full rounded-2xl object-cover [direction:ltr]"
+          />
+          <div class="[direction:ltr]">
+            <h2 class="text-[length:var(--text-h3)]">{card.title}</h2>
+            <p class="mt-3 text-[var(--color-muted)]">{card.desc}</p>
+            <a href={business.sms} class="btn btn-accent mt-5" data-track="sms_click">
+              {t.cta.textForQuote}
+            </a>
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <p class="mt-8 text-sm text-[var(--color-muted)]">
+    <span class="font-semibold text-[var(--color-ink)]">{t.services.alsoLabel}</span>
+    {" "}{t.services.also}
+  </p>
+
+  <div class="mt-12 rounded-2xl bg-[var(--color-deep)] p-8 text-center text-[var(--color-on-dark)]">
+    <h2 class="text-[length:var(--text-h3)] text-white">{t.finalCta.title}</h2>
+    <p class="mx-auto mt-2 max-w-md opacity-90">{t.finalCta.sub}</p>
+    <div class="mt-5 flex flex-wrap justify-center gap-3">
+      <a href={business.sms} class="btn btn-accent" data-track="sms_click">{t.hero.primaryCta}</a>
+      <a href={`${home}#${SECTION_IDS.pricing}`} class="btn btn-ghost-on-dark">{t.pricing.title}</a>
+    </div>
+  </div>
+</article>

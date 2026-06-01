@@ -1,0 +1,124 @@
+---
+import "../styles/global.css";
+import Analytics from "../components/Analytics.astro";
+import {
+  HTML_LANG,
+  OG_LOCALE,
+  ROUTES,
+  type Lang,
+} from "../i18n/utils";
+import { content } from "../i18n/content";
+
+interface Props {
+  lang: Lang;
+  pageKey?: keyof typeof ROUTES; // for hreflang alternates; omit for non-localized pairs like 404
+  title?: string;
+  description?: string;
+  /** JSON-LD objects to embed. */
+  schemas?: unknown[];
+  /** Set true to keep the page out of search results. */
+  noindex?: boolean;
+}
+
+const {
+  lang,
+  pageKey,
+  title,
+  description,
+  schemas = [],
+  noindex = false,
+} = Astro.props;
+
+const t = content[lang];
+const site = Astro.site?.toString().replace(/\/$/, "") ?? "";
+const pageTitle = title ?? t.meta.title;
+const pageDesc = description ?? t.meta.description;
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImage = `${site}/img/og-image.png`;
+
+// hreflang alternates
+const alternates = pageKey
+  ? [
+      { hreflang: "en", href: `${site}${ROUTES[pageKey].en}` },
+      { hreflang: "es", href: `${site}${ROUTES[pageKey].es}` },
+      { hreflang: "x-default", href: `${site}${ROUTES[pageKey].en}` },
+    ]
+  : [];
+---
+
+<!doctype html>
+<html lang={HTML_LANG[lang]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDesc} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Icons & manifest -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#0F4C5C" />
+
+    <!-- Preload the hero display font (700) only -->
+    <link
+      rel="preload"
+      href="/fonts/plus-jakarta-sans-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- hreflang alternates -->
+    {
+      alternates.map((a) => (
+        <link rel="alternate" hreflang={a.hreflang} href={a.href} />
+      ))
+    }
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="US Meg Cleaning Services" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDesc} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={OG_LOCALE[lang]} />
+    <meta
+      property="og:locale:alternate"
+      content={lang === "en" ? OG_LOCALE.es : OG_LOCALE.en}
+    />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDesc} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- JSON-LD -->
+    {
+      schemas.map((s) => (
+        <script
+          type="application/ld+json"
+          set:html={JSON.stringify(s)}
+        />
+      ))
+    }
+
+    <Analytics />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t.skipToContent}</a>
+    <slot />
+    <script is:inline define:vars={{ lang }}>
+      // Remember the language being viewed so the root "/" redirect can honor it.
+      document.cookie =
+        "usmeg_lang=" + lang + "; path=/; max-age=" + 60 * 60 * 24 * 180 + "; SameSite=Lax";
+    </script>
+  </body>
+</html>

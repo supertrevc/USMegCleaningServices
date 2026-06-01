@@ -1,0 +1,48 @@
+---
+import type { LegalDoc } from "../data/legal";
+import { content } from "../i18n/content";
+import type { Lang } from "../i18n/utils";
+
+interface Props {
+  lang: Lang;
+  doc: LegalDoc;
+  updated: string;
+}
+const { lang, doc, updated } = Astro.props;
+const t = content[lang];
+
+// Split body items into paragraphs vs bullet runs.
+function render(body: string[]) {
+  const blocks: { type: "p" | "ul"; items: string[] }[] = [];
+  for (const line of body) {
+    if (line.startsWith("- ")) {
+      const last = blocks[blocks.length - 1];
+      if (last && last.type === "ul") last.items.push(line.slice(2));
+      else blocks.push({ type: "ul", items: [line.slice(2)] });
+    } else {
+      blocks.push({ type: "p", items: [line] });
+    }
+  }
+  return blocks;
+}
+---
+
+<article class="prose-legal">
+  <h1>{doc.title}</h1>
+  <p class="text-sm">{t.legal.lastUpdated}: {updated}</p>
+  <p>{doc.intro}</p>
+  {
+    doc.sections.map((s) => (
+      <section>
+        <h2>{s.heading}</h2>
+        {render(s.body).map((b) =>
+          b.type === "ul" ? (
+            <ul>{b.items.map((i) => <li>{i}</li>)}</ul>
+          ) : (
+            <p>{b.items[0]}</p>
+          )
+        )}
+      </section>
+    ))
+  }
+</article>

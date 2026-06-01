@@ -1,0 +1,77 @@
+---
+import type { FaqGroup } from "../i18n/content";
+
+interface Props {
+  groups: FaqGroup[];
+}
+const { groups } = Astro.props;
+let idx = 0;
+---
+
+<div class="grid gap-10">
+  {
+    groups.map((group) => (
+      <div>
+        <h3 class="text-h4 mb-4">{group.title}</h3>
+        <ul class="grid gap-3">
+          {group.items.map((item) => {
+            const id = `faq-${idx++}`;
+            return (
+              <li class="card overflow-hidden">
+                <h4 class="m-0">
+                  <button
+                    type="button"
+                    class="faq-trigger flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display text-base font-semibold text-[var(--color-deep)]"
+                    aria-expanded="false"
+                    aria-controls={`${id}-panel`}
+                    id={`${id}-btn`}
+                  >
+                    <span>{item.q}</span>
+                    <svg
+                      class="faq-icon h-5 w-5 shrink-0 text-[var(--color-brand)] transition-transform duration-200"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="m6 9 6 6 6-6" />
+                    </svg>
+                  </button>
+                </h4>
+                <div
+                  id={`${id}-panel`}
+                  role="region"
+                  aria-labelledby={`${id}-btn`}
+                  hidden
+                  class="px-5 pb-5 text-[var(--color-muted)]"
+                >
+                  <p>{item.a}</p>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    ))
+  }
+</div>
+
+<script is:inline>
+  (function () {
+    document.querySelectorAll(".faq-trigger").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const expanded = btn.getAttribute("aria-expanded") === "true";
+        const panel = document.getElementById(
+          btn.getAttribute("aria-controls")
+        );
+        btn.setAttribute("aria-expanded", String(!expanded));
+        if (panel) panel.hidden = expanded;
+        const icon = btn.querySelector(".faq-icon");
+        if (icon) icon.style.transform = expanded ? "" : "rotate(180deg)";
+      });
+    });
+  })();
+</script>

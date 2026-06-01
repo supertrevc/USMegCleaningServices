@@ -1,0 +1,195 @@
+---
+import { content } from "../i18n/content";
+import { business } from "../data/business";
+import type { Lang } from "../i18n/utils";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = content[lang];
+const fm = t.contact.form;
+const jb = t.contact.jobs;
+const serviceOpts = t.pricing.fields.serviceOptions;
+---
+
+<div class="grid gap-8 lg:grid-cols-2">
+  <!-- Contact details -->
+  <div class="grid content-start gap-6">
+    <div>
+      <h3 class="text-h4">{t.contact.emailLabel}</h3>
+      <a class="mt-1 inline-block text-[var(--color-brand)] hover:underline" href={business.mailto}>
+        {business.email}
+      </a>
+    </div>
+    <div>
+      <h3 class="text-h4">{t.contact.bookLabel}</h3>
+      <p class="mt-1 flex flex-wrap gap-3">
+        <a class="btn btn-accent" href={business.sms} data-track="sms_click">{t.cta.textUs}</a>
+        <a class="btn btn-outline" href={business.tel} data-track="phone_click">{t.cta.call}</a>
+      </p>
+    </div>
+    <div>
+      <h3 class="text-h4">{t.contact.followLabel}</h3>
+      <p class="mt-1 flex gap-4">
+        <a class="text-[var(--color-brand)] hover:underline" href={business.instagram} rel="noopener" target="_blank">Instagram</a>
+        <a class="text-[var(--color-brand)] hover:underline" href={business.facebook} rel="noopener" target="_blank">Facebook</a>
+        <a class="text-[var(--color-brand)] hover:underline" href={business.reviewLink} rel="noopener" target="_blank">{t.cta.leaveReview}</a>
+      </p>
+    </div>
+
+    <!-- Jobs disclosure -->
+    <details class="card mt-2 p-4">
+      <summary class="cursor-pointer font-display font-semibold text-[var(--color-deep)]">
+        {jb.toggle}
+      </summary>
+      <form class="js-form mt-4 grid gap-3" data-form-type="job" novalidate>
+        <input type="text" name="company" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+        <input type="hidden" name="formType" value="Job application" />
+        <div>
+          <label class="block text-sm font-medium mb-1" for="job-name">{jb.name}</label>
+          <input id="job-name" name="name" required class="w-full rounded-lg border border-[var(--color-divider)] px-3 py-2.5" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1" for="job-phone">{jb.phone}</label>
+          <input id="job-phone" name="phone" required inputmode="tel" class="w-full rounded-lg border border-[var(--color-divider)] px-3 py-2.5" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1" for="job-email">{jb.email}</label>
+          <input id="job-email" name="email" type="email" class="w-full rounded-lg border border-[var(--color-divider)] px-3 py-2.5" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1" for="job-msg">{jb.message}</label>
+          <textarea id="job-msg" name="message" rows="3" class="w-full rounded-lg border border-[var(--color-divider)] px-3 py-2.5"></textarea>
+        </div>
+        <button type="submit" class="btn btn-outline justify-self-start">{jb.submit}</button>
+        <p class="form-status text-sm" role="status" aria-live="polite"></p>
+      </form>
+    </details>
+  </div>
+
+  <!-- Quote form -->
+  <div class="card p-6">
+    <h3 class="text-h4">{fm.heading}</h3>
+    <form class="js-form mt-4 grid gap-4" data-form-type="quote" novalidate>
+      <!-- Honeypot -->
+      <input type="text" name="company" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+      <input type="hidden" name="formType" value="Quote request" />
+
+      <div>
+        <label class="block text-sm font-medium mb-1" for="q-name">{fm.name} *</label>
+        <input id="q-name" name="name" required aria-describedby="q-name-err" class="w-full rounded-lg border border-[var(--color-divider)] px-3 py-2.5" />
+        <p id="q-name-err" class="field-err mt-1 hidden text-sm text-red-700"></p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1" for="q-phone">{fm.phone} *</label>
+        <input id="q-phone" name="phone" required inputmode="tel" aria-describedby="q-phone-err" class="w-full rounded-lg border border-[var(--color-divider)] px-3 py-2.5" />
+        <p id="q-phone-err" class="field-err mt-1 hidden text-sm text-red-700"></p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1" for="q-email">{fm.emailOptional}</label>
+        <input id="q-email" name="email" type="email" aria-describedby="q-email-err" class="w-full rounded-lg border border-[var(--color-divider)] px-3 py-2.5" />
+        <p id="q-email-err" class="field-err mt-1 hidden text-sm text-red-700"></p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1" for="q-service">{fm.service}</label>
+        <select id="q-service" name="service" class="w-full rounded-lg border border-[var(--color-divider)] bg-white px-3 py-2.5">
+          {serviceOpts.map((o) => <option value={o.label}>{o.label}</option>)}
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1" for="q-message">{fm.message}</label>
+        <textarea id="q-message" name="message" rows="4" class="w-full rounded-lg border border-[var(--color-divider)] px-3 py-2.5"></textarea>
+      </div>
+      <button type="submit" class="btn btn-accent">{fm.submit}</button>
+      <p class="form-status text-sm font-medium" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</div>
+
+<script
+  is:inline
+  define:vars={{
+    msg: {
+      required: fm.errorRequired,
+      email: fm.errorEmail,
+      generic: fm.errorGeneric,
+      success: fm.success,
+      sending: fm.sending,
+    },
+    fallbackSms: business.sms,
+  }}
+>
+  (function () {
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    document.querySelectorAll(".js-form").forEach(function (form) {
+      const status = form.querySelector(".form-status");
+      const submitBtn = form.querySelector('button[type="submit"]');
+
+      function setErr(name, message) {
+        const input = form.querySelector('[name="' + name + '"]');
+        if (!input) return;
+        const err = document.getElementById(input.id + "-err");
+        if (err) {
+          err.textContent = message;
+          err.classList.toggle("hidden", !message);
+        }
+        if (message) input.setAttribute("aria-invalid", "true");
+        else input.removeAttribute("aria-invalid");
+      }
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        status.textContent = "";
+        status.style.color = "";
+
+        const data = Object.fromEntries(new FormData(form).entries());
+        if (data.company) return; // honeypot tripped — silently ignore
+
+        // Validation
+        let ok = true;
+        setErr("name", "");
+        setErr("phone", "");
+        setErr("email", "");
+        if (!data.name || !data.phone) {
+          if (!data.name) setErr("name", msg.required);
+          if (!data.phone) setErr("phone", msg.required);
+          ok = false;
+        }
+        if (data.email && !EMAIL_RE.test(data.email)) {
+          setErr("email", msg.email);
+          ok = false;
+        }
+        if (!ok) {
+          const firstErr = form.querySelector('[aria-invalid="true"]');
+          if (firstErr) firstErr.focus();
+          return;
+        }
+
+        submitBtn.disabled = true;
+        const original = submitBtn.textContent;
+        submitBtn.textContent = msg.sending;
+        try {
+          const res = await fetch("/api/contact", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+          if (!res.ok) throw new Error("bad status");
+          form.reset();
+          status.style.color = "var(--color-brand)";
+          status.textContent = msg.success;
+          if (window.trackEvent)
+            window.trackEvent("quote_form_submit", { form: data.formType });
+        } catch (err) {
+          status.style.color = "#b91c1c";
+          status.textContent = msg.generic;
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = original;
+        }
+      });
+    });
+  })();
+</script>

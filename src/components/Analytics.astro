@@ -1,0 +1,62 @@
+---
+// Consent-gated GA4 + Microsoft Clarity loader.
+// IDs come from env vars (PUBLIC_GA_ID / PUBLIC_CLARITY_ID). A script is only injected
+// when its id is set; nothing fires until the visitor grants the "analytics" cookie category.
+const gaId = import.meta.env.PUBLIC_GA_ID ?? "";
+const clarityId = import.meta.env.PUBLIC_CLARITY_ID ?? "";
+---
+
+<script is:inline define:vars={{ gaId, clarityId }}>
+  (function () {
+    function getConsent() {
+      const m = document.cookie.match(/(?:^|;\s*)usmeg_consent=([^;]+)/);
+      if (!m) return null;
+      try {
+        return JSON.parse(decodeURIComponent(m[1]));
+      } catch {
+        return null;
+      }
+    }
+
+    // Always expose a safe no-op tracker so callers never break before/without consent.
+    window.trackEvent = function (name, params) {
+      if (typeof window.gtag === "function") window.gtag("event", name, params || {});
+    };
+
+    // Nothing configured — no scripts to load, no consent to honor.
+    if (!gaId && !clarityId) return;
+
+    let loaded = false;
+    function loadAnalytics() {
+      if (loaded) return;
+      const c = getConsent();
+      if (!c || !c.analytics) return;
+      loaded = true;
+
+      // GA4 — only when an id is provided.
+      if (gaId) {
+        const s = document.createElement("script");
+        s.async = true;
+        s.src = "https://www.googletagmanager.com/gtag/js?id=" + gaId;
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        window.gtag("js", new Date());
+        window.gtag("config", gaId, { anonymize_ip: true });
+      }
+
+      // Microsoft Clarity — only when an id is provided.
+      if (clarityId) {
+        (function (c, l, a, r, i, t, y) {
+          c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+          t = l.createElement(r); t.async = 1;
+          t.src = "https://www.clarity.ms/tag/" + i;
+          y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+        })(window, document, "clarity", "script", clarityId);
+      }
+    }
+
+    if (getConsent()?.analytics) loadAnalytics();
+    window.addEventListener("usmeg:consent-updated", loadAnalytics);
+  })();
+</script>
