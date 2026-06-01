@@ -1,0 +1,17 @@
+---
+import PageLayout from "../../../layouts/PageLayout.astro";
+import BookingCalendar from "../../../components/BookingCalendar.astro";
+import { content } from "../../../i18n/content";
+
+const lang = "en" as const;
+const t = content[lang];
+---
+
+<PageLayout
+  lang={lang}
+  pageKey="book"
+  title={t.booking.metaTitle}
+  description={t.booking.metaDescription}
+>
+  <BookingCalendar lang={lang} />
+</PageLayout>

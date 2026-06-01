@@ -15,6 +15,7 @@ export function getLang(url: URL): Lang {
 export const ROUTES: Record<string, Record<Lang, string>> = {
   home: { en: "/en/", es: "/es/" },
   services: { en: "/en/services/", es: "/es/servicios/" },
+  book: { en: "/en/book/", es: "/es/reservar/" },
   privacy: { en: "/en/privacy/", es: "/es/privacidad/" },
   terms: { en: "/en/terms/", es: "/es/terminos/" },
   cookies: { en: "/en/cookies/", es: "/es/cookies/" },

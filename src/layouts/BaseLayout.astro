@@ -33,7 +33,10 @@ const t = content[lang];
 const site = Astro.site?.toString().replace(/\/$/, "") ?? "";
 const pageTitle = title ?? t.meta.title;
 const pageDesc = description ?? t.meta.description;
-const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+// Canonical (and og:url) derive from the registered localized route when we have a
+// pageKey, so they always match ROUTES[...][lang]; fall back to the request path otherwise.
+const canonicalPath = pageKey ? ROUTES[pageKey][lang] : Astro.url.pathname;
+const canonical = new URL(canonicalPath, Astro.site).toString();
 const ogImage = `${site}/img/og-image.png`;
 
 // hreflang alternates

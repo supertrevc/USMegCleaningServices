@@ -205,6 +205,30 @@ type Dict = {
     lastUpdated: string;
   };
   notFound: { title: string; body: string; home: string };
+  booking: {
+    navLabel: string;
+    metaTitle: string;
+    metaDescription: string;
+    eyebrow: string;
+    heading: string;
+    intro: string;
+    selectDate: string;
+    selectTime: string;
+    chooseDateHint: string;
+    yourDetails: string;
+    detailsHint: string;
+    confirm: string;
+    requested: string;
+    willText: string;
+    summaryDate: string;
+    summaryTime: string;
+    summaryService: string;
+    chooseAnother: string;
+    prevMonth: string;
+    nextMonth: string;
+    unavailable: string;
+    noscript: string;
+  };
 };
 
 export const content: Record<Lang, Dict> = {
@@ -558,6 +582,33 @@ export const content: Record<Lang, Dict> = {
       title: "Page not found",
       body: "Sorry, we couldn't find that page. Let's get you back home.",
       home: "Back to home",
+    },
+    booking: {
+      navLabel: "Book Online",
+      metaTitle: "Book Online",
+      metaDescription:
+        "Request a cleaning appointment online with US Meg Cleaning Services in Tampa Bay. Pick a date and time — we'll text you to confirm.",
+      eyebrow: "Online Booking",
+      heading: "Book Online",
+      intro:
+        "Pick a date and time that work for you. This is a quick request — we'll text you to confirm the details.",
+      selectDate: "Select a date",
+      selectTime: "Select a time",
+      chooseDateHint: "Select a date to see available times.",
+      yourDetails: "Your details",
+      detailsHint: "Select a time to continue.",
+      confirm: "Confirm booking",
+      requested: "Booking requested",
+      willText: "We'll text to confirm",
+      summaryDate: "Date",
+      summaryTime: "Time",
+      summaryService: "Service",
+      chooseAnother: "Choose another time",
+      prevMonth: "Previous month",
+      nextMonth: "Next month",
+      unavailable: "unavailable",
+      noscript:
+        "Online booking needs JavaScript. Please text us at (813) 709-6025 to schedule.",
     },
   },
 
@@ -915,6 +966,33 @@ export const content: Record<Lang, Dict> = {
       title: "Página no encontrada",
       body: "Lo sentimos, no pudimos encontrar esa página. Volvamos al inicio.",
       home: "Volver al inicio",
+    },
+    booking: {
+      navLabel: "Reserva en línea",
+      metaTitle: "Reserva en línea",
+      metaDescription:
+        "Solicite una cita de limpieza en línea con US Meg Cleaning Services en Tampa Bay. Elija fecha y hora; le enviaremos un mensaje para confirmar.",
+      eyebrow: "Reserva en línea",
+      heading: "Agende su cita.",
+      intro:
+        "Elija la fecha y la hora que mejor le convengan. Esta es una solicitud rápida; le enviaremos un mensaje de texto para confirmar los detalles.",
+      selectDate: "Seleccione una fecha",
+      selectTime: "Seleccione un horario",
+      chooseDateHint: "Seleccione una fecha para ver los horarios disponibles.",
+      yourDetails: "Sus datos",
+      detailsHint: "Seleccione un horario para continuar.",
+      confirm: "Confirme su reserva",
+      requested: "Solicitud de reserva enviada",
+      willText: "Le enviaremos un mensaje de texto para confirmar",
+      summaryDate: "Fecha",
+      summaryTime: "Hora",
+      summaryService: "Servicio",
+      chooseAnother: "Elija otro horario",
+      prevMonth: "Mes anterior",
+      nextMonth: "Mes siguiente",
+      unavailable: "no disponible",
+      noscript:
+        "La reserva en línea requiere JavaScript. Por favor, envíenos un mensaje al (813) 709-6025 para agendar.",
     },
   },
 };

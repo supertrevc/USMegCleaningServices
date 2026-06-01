@@ -9,6 +9,7 @@ interface Props {
 const { lang } = Astro.props;
 const t = content[lang];
 const home = ROUTES.home[lang];
+const bookHref = ROUTES.book[lang];
 const otherLang: Lang = lang === "en" ? "es" : "en";
 const altHref = alternateForLang(Astro.url.pathname, otherLang);
 ---
@@ -45,6 +46,12 @@ const altHref = alternateForLang(Astro.url.pathname, otherLang);
             </li>
           ))
         }
+        {/* Cal.com swap: flip btn-outline → btn-accent when booking goes live. */}
+        <li>
+          <a class="btn btn-outline whitespace-nowrap px-3 text-sm" href={bookHref}>
+            {t.booking.navLabel}
+          </a>
+        </li>
       </ul>
     </nav>
 
@@ -130,6 +137,10 @@ const altHref = alternateForLang(Astro.url.pathname, otherLang);
             </li>
           ))
         }
+        {/* Cal.com swap: flip btn-outline → btn-accent when booking goes live. */}
+        <li class="mt-2">
+          <a class="btn btn-outline w-full" href={bookHref}>{t.booking.navLabel}</a>
+        </li>
       </ul>
     </nav>
 
