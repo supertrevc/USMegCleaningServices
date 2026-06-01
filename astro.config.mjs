@@ -3,7 +3,8 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
-const SITE = 'https://megcleaning.com';
+// Demo/preview domain so link previews resolve. Revert to https://megcleaning.com at client handoff.
+const SITE = 'https://us-meg-cleaning-services.vercel.app';
 
 // https://astro.build/config
 export default defineConfig({

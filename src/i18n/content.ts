@@ -34,22 +34,26 @@ export interface FaqGroup {
 
 export interface Review {
   name: string;
+  credential: string; // Google reviewer metadata, kept verbatim (factual, not translated)
   text: string;
 }
 
 // Reviews are language-neutral (verbatim Google reviews, English).
 export const reviews: Review[] = [
   {
-    name: "Jennifer",
+    name: "Alli Sellberg",
+    credential: "2 reviews",
+    text: "Super happy with my cleaning service today! My house was smelling amazing and they were in and out very quickly. Definitely would recommend",
+  },
+  {
+    name: "Rebecca Brave",
+    credential: "Local Guide · 11 reviews · 2 photos",
+    text: "I have nothing but positive feedback for Maria and her team. My apartment is always left sparkling clean and smelling fresh in a very timely manner. Prices are reasonable and Maria is so pleasant to work with. I would recommend her services to anyone.",
+  },
+  {
+    name: "Jennifer Zervos",
+    credential: "6 reviews · 1 photo",
     text: "Maria has the best cleaning service I've ever experienced! Our house is absolutely spotless when she and her crew are here. They go above and beyond to make sure everything is truly clean. They are fast, affordable, and so efficient too!",
-  },
-  {
-    name: "Amy",
-    text: "Meg cleaning services are fantastic! They do an amazing job, quick with cleaning services as they come with a team and have been super flexible. Highly recommend them!",
-  },
-  {
-    name: "Lisa",
-    text: "We have used Maria and Marcos for over two years now and love them. They are consistent, show up on time, and go above and beyond. We have three kids who make our house a mess, but each week Maria and Marcos put it back together for me! Highly recommend!",
   },
 ];
 
@@ -82,8 +86,13 @@ type Dict = {
     secondaryPre: string;
     secondaryLink: string;
   };
-  social: { google: string; eco: string; paymentsLabel: string };
-  about: { title: string; body: string; imgAlt: string };
+  social: {
+    google: string;
+    eco: string;
+    paymentsLabel: string;
+    payments: string[];
+  };
+  about: { title: string; body: string; imgAlt: string; photoAlt: string };
   services: {
     title: string;
     intro: string;
@@ -131,7 +140,12 @@ type Dict = {
     title: string;
     steps: { title: string; body: string; alt: string }[];
   };
-  testimonials: { title: string; sub: string };
+  testimonials: {
+    title: string;
+    sub: string;
+    timeAgo: string;
+    sourceLabel: string;
+  };
   faq: { title: string; groups: FaqGroup[] };
   finalCta: { title: string; sub: string };
   contact: {
@@ -233,14 +247,16 @@ export const content: Record<Lang, Dict> = {
       secondaryLink: "(813) 709-6025",
     },
     social: {
-      google: "★★★★★ on Google",
+      google: "on Google",
       eco: "Eco-friendly, non-toxic products",
       paymentsLabel: "We accept",
+      payments: ["Cash", "Zelle", "Venmo", "Apple Cash", "Check", "Wire Transfer"],
     },
     about: {
       title: "About Us",
       body: "US Meg Cleaning Services began as the dream of a hardworking couple from Colombia. After reuniting in Tampa, they rekindled their love, re-married, and started fresh by launching a business together. What began as a small, family-owned operation cleaning homes side by side grew quickly thanks to their dedication, warmth, and attention to detail. “MEG” isn't a person's nickname — it's an acronym for Maria E. Garcia, one of the founders, whose values of hard work and family pride shape every service. Today the company offers residential cleaning in Tampa including one-time deep cleans, regular house cleaning, and move-in/move-out cleaning for homeowners who want reliable results and a home that feels fresh, clean, and cared for.",
       imgAlt: "Illustration of the US Meg Cleaning Services founders.",
+      photoAlt: "A US Meg Cleaning Services team member cleaning a Tampa home.",
     },
     services: {
       title: "Our Services",
@@ -357,6 +373,8 @@ export const content: Record<Lang, Dict> = {
     testimonials: {
       title: "What Our Customers Say",
       sub: "See what homeowners, Airbnb hosts, and Tampa Bay clients are saying on Google.",
+      timeAgo: "7 months ago",
+      sourceLabel: "Google Review",
     },
     faq: {
       title: "Frequently Asked Questions",
@@ -587,14 +605,16 @@ export const content: Record<Lang, Dict> = {
       secondaryLink: "(813) 709-6025",
     },
     social: {
-      google: "★★★★★ en Google",
+      google: "en Google",
       eco: "Productos ecológicos y no tóxicos",
       paymentsLabel: "Aceptamos",
+      payments: ["Efectivo", "Zelle", "Venmo", "Apple Cash", "Cheque", "Transferencia"],
     },
     about: {
       title: "Sobre Nosotros",
       body: "US Meg Cleaning Services nació como el sueño de una pareja trabajadora de Colombia. Tras reunirse en Tampa, reavivaron su amor, se volvieron a casar y comenzaron de nuevo lanzando juntos un negocio. Lo que empezó como una pequeña empresa familiar limpiando hogares lado a lado creció rápidamente gracias a su dedicación, calidez y atención al detalle. “MEG” no es el apodo de una persona: es un acrónimo de Maria E. Garcia, una de las fundadoras, cuyos valores de trabajo duro y orgullo familiar dan forma a cada servicio. Hoy la empresa ofrece limpieza residencial en Tampa, incluyendo limpiezas profundas únicas, limpieza regular del hogar y limpieza de mudanza para quienes desean resultados confiables y un hogar que se sienta fresco, limpio y cuidado.",
       imgAlt: "Ilustración de los fundadores de US Meg Cleaning Services.",
+      photoAlt: "Un miembro del equipo de US Meg Cleaning Services limpiando un hogar en Tampa.",
     },
     services: {
       title: "Nuestros Servicios",
@@ -710,6 +730,8 @@ export const content: Record<Lang, Dict> = {
     testimonials: {
       title: "Lo que Dicen Nuestros Clientes",
       sub: "Mira lo que dicen propietarios, anfitriones de Airbnb y clientes de Tampa Bay en Google.",
+      timeAgo: "hace 7 meses",
+      sourceLabel: "Reseña de Google",
     },
     faq: {
       title: "Preguntas Frecuentes",

@@ -12,8 +12,10 @@ export const business = {
   instagram: "https://instagram.com/megcleaningservice",
   facebook: "https://facebook.com/megcleaningservice",
   reviewLink: "https://maps.app.goo.gl/LrMRTQ6M84hFLtMz7",
+  // Official keyless Google Maps embed for Tampa Bay (the /maps/embed?pb= form that the
+  // legacy ?q=...&output=embed URL 301-redirects to — used directly to avoid the redirect hop).
   mapEmbed:
-    "https://www.google.com/maps?q=Tampa%20Bay%2C%20Florida&z=9&output=embed",
+    "https://www.google.com/maps/embed?pb=!1m3!2m1!1sTampa+Bay,+Florida!6i9",
   priceRange: "$$",
   city: "Tampa",
   region: "FL",

@@ -1,6 +1,6 @@
 ---
 import { content, SECTION_IDS, reviews } from "../i18n/content";
-import { business, neighborhoods, payments } from "../data/business";
+import { business, neighborhoods } from "../data/business";
 import type { Lang } from "../i18n/utils";
 import Calculator from "./Calculator.astro";
 import Faq from "./Faq.astro";
@@ -70,7 +70,7 @@ const t = content[lang];
     <div class="flex flex-wrap items-center justify-center gap-2">
       <span class="sr-only">{t.social.paymentsLabel}</span>
       {
-        payments.map((p) => (
+        t.social.payments.map((p) => (
           <span class="rounded-full border border-[var(--color-divider)] px-3 py-1 text-xs font-medium text-[var(--color-muted)]">
             {p}
           </span>
@@ -91,13 +91,13 @@ const t = content[lang];
       </div>
       <div class="order-1 lg:order-2">
         <img
-          src="/img/hi-we-are-meg.webp"
-          alt={t.about.imgAlt}
+          src="/img/how-we-work/step-2.webp"
+          alt={t.about.photoAlt}
           width="560"
-          height="560"
+          height="420"
           loading="lazy"
           decoding="async"
-          class="mx-auto w-full max-w-sm"
+          class="mx-auto aspect-[4/3] w-full max-w-md rounded-2xl border border-[var(--color-divider)] object-cover shadow-sm"
         />
       </div>
     </div>
@@ -263,9 +263,16 @@ const t = content[lang];
         {
           reviews.map((r) => (
             <li class="card flex flex-col p-6">
-              <p class="text-[var(--color-accent)]" aria-label="5 out of 5 stars">★★★★★</p>
+              <div class="flex items-center justify-between gap-2">
+                <p class="text-lg text-[var(--color-accent)]" aria-label="5 out of 5 stars">★★★★★</p>
+                <span class="text-xs font-medium text-[var(--color-muted)]">{t.testimonials.sourceLabel}</span>
+              </div>
               <blockquote class="mt-3 flex-1 text-[var(--color-ink)]">“{r.text}”</blockquote>
-              <p class="mt-4 font-display font-semibold text-[var(--color-deep)]">— {r.name}</p>
+              <div class="mt-4">
+                <p class="font-display font-semibold text-[var(--color-deep)]">{r.name}</p>
+                <p class="text-sm text-[var(--color-muted)]">{r.credential}</p>
+                <p class="mt-0.5 text-xs text-[var(--color-muted)]">{t.testimonials.timeAgo}</p>
+              </div>
             </li>
           ))
         }
