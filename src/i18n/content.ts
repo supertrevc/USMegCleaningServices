@@ -69,6 +69,7 @@ type Dict = {
   nav: { label: string; href: string }[];
   cta: {
     textUs: string;
+    textShort: string;
     textQuote: string;
     freeQuote: string;
     call: string;
@@ -253,6 +254,7 @@ export const content: Record<Lang, Dict> = {
     ],
     cta: {
       textUs: "Text us (813) 709-6025",
+      textShort: "Text us",
       textQuote: "Text us for a free quote",
       freeQuote: "Get a free quote today",
       call: "Call (813) 709-6025",
@@ -633,6 +635,7 @@ export const content: Record<Lang, Dict> = {
     ],
     cta: {
       textUs: "Escríbenos (813) 709-6025",
+      textShort: "Escríbenos",
       textQuote: "Escríbenos para una cotización gratis",
       freeQuote: "Obtén una cotización gratis hoy",
       call: "Llama al (813) 709-6025",

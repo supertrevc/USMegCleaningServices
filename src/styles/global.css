@@ -154,6 +154,16 @@
     color: var(--color-brand);
   }
 
+  /* "Cap teal" from the hero illustration — used for the Book Online button so it
+     stands out from the amber "Text us" CTA. White text passes WCAG AA (4.8:1). */
+  .btn-cap {
+    background-color: #0e7c99;
+    color: #ffffff;
+  }
+  .btn-cap:hover {
+    background-color: #0b6a82;
+  }
+
   .btn-ghost-on-dark {
     background-color: transparent;
     color: var(--color-on-dark);
