@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
+import { IS_INDEXABLE } from './src/lib/search-visibility.mjs';
 
 // Demo/preview domain so link previews resolve. Revert to https://megcleaning.com at client handoff.
 const SITE = 'https://us-meg-cleaning-services.vercel.app';
@@ -18,7 +19,9 @@ export default defineConfig({
       redirectToDefaultLocale: false,
     },
   },
-  integrations: [
+  // A sitemap is a direct request to index every URL in it, so a prospect
+  // demo ships without one. See src/lib/search-visibility.mjs.
+  integrations: !IS_INDEXABLE ? [] : [
     sitemap({
       // Drop the bare root redirect (noindex) from the sitemap.
       filter: (page) => {

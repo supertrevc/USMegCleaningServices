@@ -28,6 +28,7 @@ const {
   schemas = [],
   noindex = false,
 } = Astro.props;
+import { IS_INDEXABLE } from '../lib/search-visibility.mjs';
 
 const t = content[lang];
 const site = Astro.site?.toString().replace(/\/$/, "") ?? "";
@@ -35,6 +36,16 @@ const pageTitle = title ?? t.meta.title;
 const pageDesc = description ?? t.meta.description;
 // Canonical (and og:url) derive from the registered localized route when we have a
 // pageKey, so they always match ROUTES[...][lang]; fall back to the request path otherwise.
+
+/**
+ * While this is a prospect demo every page is noindex, whatever the page asked
+ * for; once SITE_SEARCH_VISIBILITY=public only pages that opt in are. The
+ * matching X-Robots-Tag header lives in vercel.json.
+ */
+const robotsDirective = IS_INDEXABLE
+  ? (noindex ? 'noindex, nofollow' : null)
+  : 'noindex, nofollow, noarchive, noimageindex';
+
 const canonicalPath = pageKey ? ROUTES[pageKey][lang] : Astro.url.pathname;
 const canonical = new URL(canonicalPath, Astro.site).toString();
 const ogImage = `${site}/img/og-image.png`;
@@ -57,7 +68,8 @@ const alternates = pageKey
     <title>{pageTitle}</title>
     <meta name="description" content={pageDesc} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {robotsDirective && <meta name="robots" content={robotsDirective} />}
+    {robotsDirective && <meta name="googlebot" content={robotsDirective} />}
 
     <!-- Icons & manifest -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
